@@ -1,8 +1,8 @@
 #pragma code_page(65001)
-1 ICON "assets/daozai.ico"
+1 ICON "assets/daozhu.ico"
 1 VERSIONINFO
- FILEVERSION 0,6,64,0
- PRODUCTVERSION 0,6,64,0
+ FILEVERSION 0,7,0,0
+ PRODUCTVERSION 0,7,0,0
  FILEFLAGSMASK 0x3fL
  FILEFLAGS 0x0L
  FILEOS 0x40004L
@@ -13,12 +13,15 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "FileDescription", "岛仔"
-            VALUE "InternalName", "Daozai"
-            VALUE "OriginalFilename", "daozai.exe"
-            VALUE "ProductName", "岛仔 Daozai"
-            VALUE "ProductVersion", "0.6.64"
-            VALUE "FileVersion", "0.6.64"
+            VALUE "CompanyName", "林泽涛"
+            VALUE "FileDescription", "岛主"
+            VALUE "InternalName", "Daozhu"
+            VALUE "LegalCopyright", "Copyright © 2026 林泽涛"
+            VALUE "OriginalFilename", "daozhu.exe"
+            VALUE "ProductName", "岛主 Daozhu"
+            VALUE "ProductVersion", "0.7.0"
+            VALUE "FileVersion", "0.7.0"
+            VALUE "Comments", "作者：林泽涛"
         END
     END
     BLOCK "VarFileInfo"

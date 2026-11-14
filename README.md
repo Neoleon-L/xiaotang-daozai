@@ -1,25 +1,25 @@
 <div align="center">
 
-<img src="assets/daozai-logo.png" width="112" alt="岛仔" />
+<img src="assets/daozhu-logo.png" width="112" alt="岛主" />
 
-# 岛仔 · Daozai
+# 岛主 · Daozhu
 
 **一座小岛，装下桌面日常。**
 
 Windows 桌面伙伴，把消息、音乐、日程、天气和 AI 额度放到手边。
 
-[![最新版本](https://img.shields.io/github/v/release/Renly1994/xiaotang-daozai?color=7955b8&label=最新版本)](https://github.com/Renly1994/xiaotang-daozai/releases/latest)
+[![最新版本](https://img.shields.io/github/v/release/Neoleon-L/xiaotang-daozai?color=7955b8&label=最新版本)](https://github.com/Neoleon-L/xiaotang-daozai/releases/latest)
 [![Windows](https://img.shields.io/badge/Windows-10%20%2F%2011-0078D4)](#下载安装)
 [![开源许可](https://img.shields.io/badge/License-MIT-3cbf91)](LICENSE)
 [![Rust 与 egui](https://img.shields.io/badge/Rust-egui-8b6ca8)](#从源码构建与参与开发)
 
-**[下载 Windows 版](https://github.com/Renly1994/xiaotang-daozai/releases/latest)** · [使用指南](docs/USAGE.md) · [更新记录](CHANGELOG.md) · [反馈问题](https://github.com/Renly1994/xiaotang-daozai/issues)
+**[使用指南](docs/USAGE.md)** · [更新记录](CHANGELOG.md) · 作者：林泽涛
 
 </div>
 
-岛仔是一款开源的 Windows 桌面小工具。平时收起在屏幕边缘，鼠标靠近就展开；切歌、看日程、复制验证码、记一条待办，都能顺手完成。小岛里的伙伴会眨眼、打盹、喝水，也会跟着音乐唱歌。
+岛主是一款开源的 Windows 桌面小工具。平时收起在屏幕边缘，鼠标靠近就展开；切歌、看日程、复制验证码、记一条待办，都能顺手完成。小岛里的伙伴会眨眼、打盹、喝水，也会跟着音乐唱歌。
 
-你可以选刘海或胶囊，放在顶部、左侧或右侧，只保留自己需要的功能。岛仔使用 Rust 和 egui 构建，不依赖 Electron。
+你可以选刘海或胶囊，放在顶部、左侧或右侧，只保留自己需要的功能。岛主使用 Rust 和 egui 构建，不依赖 Electron。
 
 ## 微信里有新消息，看一眼岛边
 
@@ -62,7 +62,7 @@ Windows 桌面伙伴，把消息、音乐、日程、天气和 AI 额度放到�
 
 ![日历与会议安排、每周重复待办、番茄专注与饮水提醒](docs/images/readme/daily.webp)
 
-| 想做的事 | 岛仔能帮你 |
+| 想做的事 | 岛主能帮你 |
 | --- | --- |
 | 看今天的安排 | 月历与当日时间线，合并多个日历和正式邮件邀请，提前提醒会议 |
 | 记住每周的事 | 待办支持单次提醒、每周指定日期重复或每天重复；下一次到来时恢复为待办 |
@@ -98,10 +98,10 @@ Windows 桌面伙伴，把消息、音乐、日程、天气和 AI 额度放到�
 订阅额度、重置时间、套餐积分与 API 余额，按服务展示。多个账号可分别命名、选择配色，常用账号直接放在收起的小岛上。
 
 - **ZCode**：查看套餐额度。
-- **Claude**：只读取桌面版本地用量历史与缓存，或接收 Claude Code 官方状态栏输出；岛仔不使用 Claude 登录令牌，也不请求 Claude 额度接口。数据随官方客户端使用更新，桌面版缓存有效时自动显示重置时间，读取不到时显示未知。
+- **Claude**：只读取桌面版本地用量历史与缓存，或接收 Claude Code 官方状态栏输出；岛主不使用 Claude 登录令牌，也不请求 Claude 额度接口。数据随官方客户端使用更新，桌面版缓存有效时自动显示重置时间，读取不到时显示未知。
 - **Kiro**：只读识别 Kiro 登录缓存并核验用户，显示套餐、有效试用与赠送 / 加购点数及明细，超额上限单独显示；支持美国东部和欧洲中部区域。不自动续期，登录过期时请在 Kiro 中重新登录。
 - **WorkBuddy**：查看剩余积分；优先识别本机客户端登录，也可在默认浏览器完成授权。
-- **Gemini**：支持 Chrome 144+ 原生授权连接，读取官网的 5 小时与每周额度，无需扩展。先在 Chrome 登录 Gemini，首次在 `chrome://inspect/#remote-debugging` 开启连接，回岛仔点击连接并在 Chrome 允许授权；会话加密保存在本机，后续独立刷新。高级设置保留手动 Cookie 连接。
+- **Gemini**：支持 Chrome 144+ 原生授权连接，读取官网的 5 小时与每周额度，无需扩展。先在 Chrome 登录 Gemini，首次在 `chrome://inspect/#remote-debugging` 开启连接，回岛主点击连接并在 Chrome 允许授权；会话加密保存在本机，后续独立刷新。高级设置保留手动 Cookie 连接。
 - **DeepSeek**：使用 API Key 连接，查看账户余额、充值与赠送金额。
 
 连接方式、可用字段与账号订阅有关；请求失败或登录过期时，以对应服务的官方页面为准。
@@ -121,17 +121,17 @@ Windows 桌面伙伴，把消息、音乐、日程、天气和 AI 额度放到�
 
 ## 下载安装
 
-前往 **[最新正式版](https://github.com/Renly1994/xiaotang-daozai/releases/latest)**，按使用习惯选择：
+由本仓库源码自行编译，产物在 `dist/`：
 
-| 下载文件 | 使用方式 |
+| 产物 | 使用方式 |
 | --- | --- |
-| `Daozai-Setup-v版本号-x64.exe` | **推荐**。双击安装，可选择安装位置、桌面快捷方式和开机自启 |
-| `Daozai-v版本号-windows-x64.zip` | 免安装。完整解压后运行 `daozai.exe`，用户数据仍保存在应用数据目录 |
+| `Daozhu-Setup-v版本号-x64.exe` | **推荐**。双击安装，可选择安装位置、桌面快捷方式和开机自启 |
+| `Daozhu-v版本号-windows-x64.zip` | 免安装。完整解压后运行 `daozhu.exe`，用户数据仍保存在应用数据目录 |
 | `SHA256SUMS.txt` | 下载校验，可用 PowerShell `Get-FileHash -Algorithm SHA256` 比对 |
 
 首次安装默认创建桌面快捷方式、不开机自启。安装后从小岛或托盘打开设置，选择需要的功能和连接。
 
-**更新**：设置 → 关于 → 检查更新。支持应用内下载、校验后重启更新，也可从发布页下载覆盖安装；升级保留原设置和数据，卸载同样保留用户数据。下载窗口提供夸克网盘备用入口。
+**更新**：应用内提供在线更新，来源是本项目的 GitHub 仓库 [`Neoleon-L/xiaotang-daozai`](https://github.com/Neoleon-L/xiaotang-daozai)。检查更新只访问 `api.github.com` 读取最新版本号与发布说明；下载时只访问该仓库 Releases 下的官方地址，取得 `Daozhu-v版本号-windows-x64.zip` 并校验 SHA-256，随后由内置脚本替换程序，设置与数据保留在 `%APPDATA%\Daozhu`。也可以从发布页手动下载同一压缩包，覆盖安装目录中的 `daozhu.exe`。程序不访问网盘或其他第三方下载源。
 
 **系统**：Windows 10／11 x64。默认使用 OpenGL，初始化失败时自动尝试 Direct3D 12。Windows 11 已进行本机实测，Windows 10、不同显卡及多屏组合仍需更多反馈。暂不提供 macOS、Linux 或 ARM64 成品包。
 
@@ -153,13 +153,13 @@ QQ 收信、邮件日程和飞书个人日历已进行真实账号测试。其�
 <details>
 <summary><b>数据与隐私</b></summary>
 
-- 设置、待办、本机日程、饮水记录、剪贴板历史、置物路径与连接元数据保存在 `%APPDATA%\Daozai`。
+- 设置、待办、本机日程、饮水记录、剪贴板历史、置物路径与连接元数据保存在 `%APPDATA%\Daozhu`。
 - 邮箱和日历密码、DeepSeek API Key 保存在 Windows 凭据管理器；独立 Gemini、WorkBuddy 会话使用 Windows DPAPI 加密。
 - 微信新消息提醒根据任务栏闪动工作，不读取联系人或聊天正文；QQ 与应用通知需要相应的系统通知权限。
 - 读取已有 AI 客户端登录时不回写原客户端配置。不要把授权码、Cookie、API Key 或登录 JSON 上传到 Issue。
 - 邮箱读取收件箱，不读取垃圾邮件文件夹；邮件正文在当前进程中用于展示和识别。
-- 岛仔没有自建的邮件或日程上传后台；开启联网功能后，会访问对应服务商与歌词服务。
-- 天气只用城市名或由定位服务给出的经纬度查询 Open-Meteo；自动定位通过 `ipwho.is` 获取大致城市，不读取账号信息。最近一次天气结果缓存在 `%APPDATA%\Daozai\weather.json`。
+- 岛主没有自建的邮件或日程上传后台；开启联网功能后，会访问对应服务商与歌词服务。
+- 天气只用城市名或由定位服务给出的经纬度查询 Open-Meteo；自动定位通过 `ipwho.is` 获取大致城市，不读取账号信息。最近一次天气结果缓存在 `%APPDATA%\Daozhu\weather.json`。
 
 完整说明见 [隐私与安全](docs/PRIVACY.md)。
 
@@ -172,8 +172,8 @@ QQ 收信、邮件日程和飞书个人日历已进行真实账号测试。其�
 
 ```powershell
 rustup default stable-x86_64-pc-windows-msvc
-cargo build --locked --release --bin daozai
-.\target\release\daozai.exe
+cargo build --locked --release --bin daozhu
+.\target\release\daozhu.exe
 ```
 
 运行测试及打包：
@@ -191,12 +191,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\package.ps1
 
 ## 开源与致谢
 
-岛仔原创代码采用 [MIT License](LICENSE)。Rust 依赖、vendored 代码、第三方图标及品牌标识沿用各自的许可或权利声明；MIT 不授予服务商标使用权，也不代表官方合作或认证。详见 [第三方声明](THIRD_PARTY_NOTICES.txt) 和 [依赖说明](docs/DEPENDENCIES.md)。
+岛主原创代码采用 [MIT License](LICENSE)。Rust 依赖、vendored 代码、第三方图标及品牌标识沿用各自的许可或权利声明；MIT 不授予服务商标使用权，也不代表官方合作或认证。详见 [第三方声明](THIRD_PARTY_NOTICES.txt) 和 [依赖说明](docs/DEPENDENCIES.md)。
 
 「悬浮云」皮肤作者：啵（[@hanhb123](https://github.com/hanhb123)）。感谢 egui／eframe、Rust 社区，以及提供参考与素材的开源项目。
 
 ## 感谢支持
 
-![感谢支持岛仔的朋友们](docs/images/readme/supporters.webp)
+![感谢支持岛主的朋友们](docs/images/readme/supporters.webp)
 
-喜欢岛仔的话，欢迎点一个 **Star**，也可以在 **设置 → 关于 → 支持作者** 请岛仔喝杯咖啡。
+喜欢岛主的话，欢迎点一个 **Star**，也可以在 **设置 → 关于 → 支持作者** 请岛主喝杯咖啡。

@@ -1,13 +1,13 @@
 ﻿//! 持久化与状态模型。
 //!
 //! 文件布局与原工具同名同结构（原工具字符串中可见的路径与键名），但默认目录
-//! 用独立的 `%APPDATA%\Daozai`，避免与原工具的 `%APPDATA%\Nusa` 互相覆盖：
-//!   %APPDATA%\Daozai\settings.txt   -> pet=0/1, minimal=0/1
-//!   %APPDATA%\Daozai\todo.txt
-//!   %APPDATA%\Daozai\water.txt      -> bottle=<ml> / goal=<ml> / start=YYYY-MM-DD
-//!   %APPDATA%\Daozai\shelf.txt      -> 置物清单（每行一个绝对路径）
+//! 用独立的 `%APPDATA%\Daozhu`，避免与原工具的 `%APPDATA%\Nusa` 互相覆盖：
+//!   %APPDATA%\Daozhu\settings.txt   -> pet=0/1, minimal=0/1
+//!   %APPDATA%\Daozhu\todo.txt
+//!   %APPDATA%\Daozhu\water.txt      -> bottle=<ml> / goal=<ml> / start=YYYY-MM-DD
+//!   %APPDATA%\Daozhu\shelf.txt      -> 置物清单（每行一个绝对路径）
 //!
-//! 设置环境变量 `DAOZAI_DATA_DIR` 可把以上目录整体改到别处（用于与已安装的
+//! 设置环境变量 `DAOZHU_DATA_DIR` 可把以上目录整体改到别处（用于与已安装的
 //! 原工具并存、或跑测试时不碰真实数据）。
 
 use std::fs;
@@ -18,10 +18,36 @@ fn env_dir(key: &str) -> PathBuf {
 }
 
 pub fn config_dir() -> PathBuf {
+    if let Ok(root) = std::env::var("DAOZHU_DATA_DIR") {
+        return PathBuf::from(root);
+    }
     if let Ok(root) = std::env::var("DAOZAI_DATA_DIR") {
         return PathBuf::from(root);
     }
-    env_dir("APPDATA").join("Daozai")
+    let root = env_dir("APPDATA");
+    let dir = root.join("Daozhu");
+    // 首次启动时，若旧版（岛仔）数据目录仍在，整体复制过来，保留既有设置与记录。
+    if !dir.exists() {
+        let legacy = root.join("Daozai");
+        if legacy.is_dir() {
+            let _ = copy_tree(&legacy, &dir);
+        }
+    }
+    dir
+}
+
+fn copy_tree(from: &Path, to: &Path) -> std::io::Result<()> {
+    fs::create_dir_all(to)?;
+    for entry in fs::read_dir(from)? {
+        let entry = entry?;
+        let target = to.join(entry.file_name());
+        if entry.file_type()?.is_dir() {
+            copy_tree(&entry.path(), &target)?;
+        } else {
+            let _ = fs::copy(entry.path(), target);
+        }
+    }
+    Ok(())
 }
 
 fn read_kv(path: &Path) -> Vec<(String, String)> {
@@ -847,7 +873,7 @@ mod tests {
 
     #[test]
     fn quality_save_preserves_neighbor_and_cleans_failed_writes() {
-        let dir=std::env::temp_dir().join(format!("daozai-quality-save-{}",std::process::id()));
+        let dir=std::env::temp_dir().join(format!("daozhu-quality-save-{}",std::process::id()));
         fs::create_dir_all(&dir).unwrap();
         let path=dir.join("settings.txt");let neighbor=dir.join("settings.tmp");
         fs::write(&neighbor,b"other data").unwrap();
@@ -865,7 +891,7 @@ mod tests {
 
     #[test]
     fn atomic_write_replaces_existing_settings() {
-        let dir=std::env::temp_dir().join(format!("daozai-save-{}-{}",std::process::id(),std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+        let dir=std::env::temp_dir().join(format!("daozhu-save-{}-{}",std::process::id(),std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
         fs::create_dir_all(&dir).unwrap();
         let path=dir.join("settings.txt");
         atomic_write(&path,b"focus_minutes=25\n").unwrap();
@@ -878,7 +904,7 @@ mod tests {
 
     #[test]
     fn quality_concurrent_saves_publish_one_complete_value() {
-        let dir=std::env::temp_dir().join(format!("daozai-quality-concurrent-{}",std::process::id()));fs::create_dir_all(&dir).unwrap();
+        let dir=std::env::temp_dir().join(format!("daozhu-quality-concurrent-{}",std::process::id()));fs::create_dir_all(&dir).unwrap();
         let path=dir.join("cache.lrc");let gate=std::sync::Arc::new(std::sync::Barrier::new(4));
         let workers:Vec<_>=(0..4u8).map(|byte|{let path=path.clone();let gate=gate.clone();std::thread::spawn(move||{gate.wait();atomic_write(&path,&vec![byte;128*1024])})}).collect();
         for worker in workers{worker.join().unwrap().unwrap();}

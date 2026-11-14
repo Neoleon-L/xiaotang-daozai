@@ -2,10 +2,9 @@
 use eframe::egui;
 use std::{io::{Read, Write}, path::PathBuf, sync::{mpsc::{self, Receiver}, Arc, atomic::{AtomicBool, Ordering}}, time::Duration};
 
-const REPOSITORY: &str = "https://github.com/Renly1994/xiaotang-daozai";
-const API: &str = "https://api.github.com/repos/Renly1994/xiaotang-daozai/releases/latest";
-const RELEASES: &str = "https://github.com/Renly1994/xiaotang-daozai/releases/latest";
-const BACKUP_DOWNLOAD: &str = "https://pan.quark.cn/s/0a39b4e1f332";
+const REPOSITORY: &str = "https://github.com/Neoleon-L/xiaotang-daozai";
+const API: &str = "https://api.github.com/repos/Neoleon-L/xiaotang-daozai/releases/latest";
+const RELEASES: &str = "https://github.com/Neoleon-L/xiaotang-daozai/releases/latest";
 
 #[derive(Clone, Debug)]
 struct Release { version: String, notes: String, page: String, package: Option<Package> }
@@ -108,8 +107,8 @@ impl State {
             ctx.load_texture("update-logo", egui::ColorImage::from_rgba_unmultiplied([icon.width as usize,icon.height as usize],&icon.rgba),egui::TextureOptions::LINEAR)
         }).id();
         let installing = self.rx.is_some() && self.cancel.is_none();
-        ctx.show_viewport_immediate(egui::ViewportId::from_hash_of("daozai-update"),
-            egui::ViewportBuilder::default().with_title("岛仔更新").with_icon(theme::app_icon())
+        ctx.show_viewport_immediate(egui::ViewportId::from_hash_of("daozhu-update"),
+            egui::ViewportBuilder::default().with_title("岛主更新").with_icon(theme::app_icon())
                 .with_inner_size([520.0, 416.0]).with_resizable(false).with_decorations(false)
                 .with_transparent(true).with_active(true), |ctx, _| {
                 if focus {
@@ -151,9 +150,9 @@ impl State {
                             ui.image((logo,egui::vec2(52.0,52.0)));
                             ui.add_space(4.0);
                             ui.vertical(|ui| {
-                                ui.label(egui::RichText::new("岛仔有新版本了").font(theme::font(21.0,W::Semibold)));
+                                ui.label(egui::RichText::new("岛主有新版本了").font(theme::font(21.0,W::Semibold)));
                                 ui.horizontal(|ui| {
-                                    ui.label(egui::RichText::new(option_env!("DAOZAI_BUILD_LABEL").unwrap_or(env!("CARGO_PKG_VERSION"))).color(theme::DIM));
+                                    ui.label(egui::RichText::new(option_env!("DAOZHU_BUILD_LABEL").unwrap_or(env!("CARGO_PKG_VERSION"))).color(theme::DIM));
                                     ui.label(egui::RichText::new("→").color(theme::DIM));
                                     egui::Frame::new().fill(theme::alpha_blue(0.12)).corner_radius(6.0)
                                         .inner_margin(egui::Margin::symmetric(8,3)).show(ui, |ui| {
@@ -209,8 +208,6 @@ impl State {
                         }
                         ui.add_space(2.0);
                         ui.horizontal(|ui| {
-                            ui.hyperlink_to(egui::RichText::new("网盘下载").size(11.5).color(theme::BLUE),BACKUP_DOWNLOAD);
-                            ui.label(egui::RichText::new("·").color(theme::DIM));
                             ui.hyperlink_to(egui::RichText::new("浏览器下载").size(11.5).color(theme::GRAY),&release.page);
                             ui.label(egui::RichText::new("·").color(theme::DIM));
                             ui.hyperlink_to(egui::RichText::new("查看发布说明").size(11.5).color(theme::GRAY),&release.page);
@@ -225,9 +222,9 @@ impl State {
 }
 
 // Windows 的 GL 透明窗口可能仍显示黑底，按绘制轮廓裁掉窗口外沿。
-/// 只统计岛仔自己的文件（KB）。共享安装文件夹里的其他软件不算在内。
+/// 只统计岛主自己的文件（KB）。共享安装文件夹里的其他软件不算在内。
 fn own_files_kb(dir: &std::path::Path) -> u32 {
-    let bytes: u64 = ["daozai.exe", "Uninstall.exe", "LICENSE", "THIRD_PARTY_NOTICES.txt"].iter()
+    let bytes: u64 = ["daozhu.exe", "Uninstall.exe", "LICENSE", "THIRD_PARTY_NOTICES.txt"].iter()
         .filter_map(|name| std::fs::metadata(dir.join(name)).ok()).filter(|meta| meta.is_file()).map(|meta| meta.len()).sum();
     bytes.div_ceil(1024).min(u64::from(u32::MAX)) as u32
 }
@@ -237,7 +234,7 @@ fn own_files_kb(dir: &std::path::Path) -> u32 {
 #[cfg(windows)]
 pub fn record_install_size() {
     use windows::{core::w, Win32::System::Registry::{RegGetValueW, RegSetKeyValueW, HKEY_CURRENT_USER, REG_DWORD, RRF_RT_REG_SZ}};
-    let key = w!("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Daozai");
+    let key = w!("Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Daozhu");
     let Some(dir) = std::env::current_exe().ok().and_then(|exe| exe.parent().map(PathBuf::from)) else { return };
     let mut buffer = [0u16; 1024];
     let mut size = (buffer.len() * 2) as u32;
@@ -257,7 +254,7 @@ fn clip_update_window(rect: egui::Rect, scale: f32) {
     unsafe extern "system" fn visit(hwnd: HWND, data: LPARAM) -> BOOL {
         let mut title = [0u16; 64];
         let len = GetWindowTextW(hwnd, &mut title) as usize;
-        if String::from_utf16_lossy(&title[..len]) != "岛仔更新" { return BOOL(1); }
+        if String::from_utf16_lossy(&title[..len]) != "岛主更新" { return BOOL(1); }
         let &(rect, scale) = &*(data.0 as *const (egui::Rect, f32));
         let region = update_window_region(rect, scale);
         let old = CreateRectRgn(0, 0, 0, 0);
@@ -300,7 +297,7 @@ fn http_agent() -> Result<ureq::Agent, String> {
 
 fn check() -> Result<Option<Release>, String> {
     let response = http_agent()?
-        .get(API).set("User-Agent", concat!("Daozai/", env!("CARGO_PKG_VERSION")))
+        .get(API).set("User-Agent", concat!("Daozhu/", env!("CARGO_PKG_VERSION")))
         .set("Accept", "application/vnd.github+json").call().map_err(|error| match error {
             ureq::Error::Status(403 | 429, _) => "检查过于频繁，请稍后重试".to_owned(),
             ureq::Error::Status(404, _) => "暂未找到正式版本，请查看发布页".to_owned(),
@@ -313,7 +310,7 @@ fn check() -> Result<Option<Release>, String> {
 
 fn release_info(value: &serde_json::Value, current: &str) -> Result<Option<Release>, String> {
     let Some(tag) = parse_release(value, current)? else { return Ok(None); };
-    let name = format!("Daozai-v{}-windows-x64.zip", tag.trim_start_matches('v'));
+    let name = format!("Daozhu-v{}-windows-x64.zip", tag.trim_start_matches('v'));
     let expected = format!("{REPOSITORY}/releases/download/{tag}/{name}");
     let package = value["assets"].as_array().and_then(|assets| assets.iter().find(|asset| asset["name"] == name))
         .and_then(|asset| {
@@ -329,12 +326,12 @@ fn release_info(value: &serde_json::Value, current: &str) -> Result<Option<Relea
 
 fn download(release: &Release, tx: &mpsc::Sender<Event>, cancel: &AtomicBool) -> Result<PathBuf, String> {
     let package = release.package.as_ref().ok_or("请通过浏览器下载此版本")?;
-    let root = std::env::var_os("LOCALAPPDATA").map(PathBuf::from).ok_or("无法找到更新缓存目录")?.join("Daozai/Updates");
+    let root = std::env::var_os("LOCALAPPDATA").map(PathBuf::from).ok_or("无法找到更新缓存目录")?.join("Daozhu/Updates");
     let work = root.join(format!("{}-{}", std::process::id(), std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_nanos()));
     std::fs::create_dir_all(&work).map_err(|_| "无法创建更新缓存")?;
     let result = (|| {
         let response = http_agent()?
-            .get(&package.url).call().map_err(|_| "连接下载服务器失败，请检查网络或代理，或使用网盘下载")?;
+            .get(&package.url).call().map_err(|_| "连接下载服务器失败，请检查网络或代理，或到 GitHub 发布页手动下载")?;
         if !response.get_url().starts_with("https://") { return Err("更新下载未使用安全连接".into()); }
         let mut input = response.into_reader();
         let mut output = std::fs::File::create(work.join("update.zip")).map_err(|_| "无法保存更新包")?;
@@ -354,7 +351,7 @@ fn transfer(input: &mut impl Read, output: &mut impl Write, package: &Package, c
     let mut buffer = [0u8; 65536]; let mut total = 0u64;
     loop {
         if cancel.load(Ordering::Relaxed) { return Err("下载已取消".into()); }
-        let length = input.read(&mut buffer).map_err(|_| "下载中断或等待超时，请重试或使用网盘下载")?;
+        let length = input.read(&mut buffer).map_err(|_| "下载中断或等待超时，请重试或到 GitHub 发布页手动下载")?;
         if length == 0 { break; }
         total += length as u64;
         if total > package.size { return Err("更新包大小不符，请重新下载".into()); }
@@ -412,10 +409,10 @@ fn parse_release(value: &serde_json::Value, current: &str) -> Result<Option<Stri
 #[cfg(test)]
 mod install_size_tests {
     #[test]
-    fn install_size_counts_only_daozai_files() {
-        let dir = std::env::temp_dir().join(format!("daozai-size-{}", std::process::id()));
+    fn install_size_counts_only_daozhu_files() {
+        let dir = std::env::temp_dir().join(format!("daozhu-size-{}", std::process::id()));
         std::fs::create_dir_all(dir.join("Other App")).unwrap();
-        std::fs::write(dir.join("daozai.exe"), vec![0u8; 3000]).unwrap();
+        std::fs::write(dir.join("daozhu.exe"), vec![0u8; 3000]).unwrap();
         std::fs::write(dir.join("LICENSE"), vec![0u8; 100]).unwrap();
         std::fs::write(dir.join("Other App").join("big.bin"), vec![0u8; 5 * 1024 * 1024]).unwrap();
         std::fs::write(dir.join("other.exe"), vec![0u8; 2 * 1024 * 1024]).unwrap();
@@ -503,8 +500,8 @@ mod tests {
     fn only_matching_verified_windows_package_can_install() {
         let mut value = release("v0.6.40");
         value["body"] = "更新说明".into();
-        value["assets"] = serde_json::json!([{"name":"Daozai-v0.6.40-windows-x64.zip",
-            "browser_download_url":format!("{REPOSITORY}/releases/download/v0.6.40/Daozai-v0.6.40-windows-x64.zip"),
+        value["assets"] = serde_json::json!([{"name":"Daozhu-v0.6.40-windows-x64.zip",
+            "browser_download_url":format!("{REPOSITORY}/releases/download/v0.6.40/Daozhu-v0.6.40-windows-x64.zip"),
             "size":123,"digest":format!("sha256:{}", "a".repeat(64))}]);
         let parsed = release_info(&value, "0.6.39").unwrap().unwrap();
         assert!(parsed.package.is_some()); assert_eq!(parsed.notes, "更新说明");
@@ -554,7 +551,7 @@ mod tests {
         let mut state = State::default();
         let (tx, rx) = mpsc::channel(); state.rx = Some(rx);
         state.cancel = Some(Arc::new(AtomicBool::new(true)));
-        let work = std::env::temp_dir().join(format!("daozai-cancel-test-{}", std::process::id()));
+        let work = std::env::temp_dir().join(format!("daozhu-cancel-test-{}", std::process::id()));
         std::fs::create_dir_all(&work).unwrap();
         tx.send(Event::Ready(work.clone())).unwrap();
         state.poll(&egui::Context::default());
@@ -590,10 +587,10 @@ mod tests {
     #[test]
     #[ignore = "按需导出发现新版时的设置界面，使用独立数据目录"]
     fn available_update_preview() {
-        let dest = std::path::PathBuf::from(std::env::var_os("DAOZAI_UPDATE_PREVIEW_DIR").expect("需指定预览目录"));
+        let dest = std::path::PathBuf::from(std::env::var_os("DAOZHU_UPDATE_PREVIEW_DIR").expect("需指定预览目录"));
         std::fs::create_dir_all(&dest).unwrap();
-        let old = std::env::var_os("DAOZAI_DATA_DIR");
-        std::env::set_var("DAOZAI_DATA_DIR", dest.join("data"));
+        let old = std::env::var_os("DAOZHU_DATA_DIR");
+        std::env::set_var("DAOZHU_DATA_DIR", dest.join("data"));
         let ctx = egui::Context::default();
         let mut app = crate::app::App::new(&ctx, Default::default());
         app.updates.result = Some(Ok(Some(Release { version: "v0.6.63".into(),
@@ -607,7 +604,7 @@ mod tests {
         let capture = output.clone();
         egui::Context::set_immediate_viewport_renderer(move |ctx, mut viewport| {
             let id = viewport.ids.this;
-            assert_eq!(id, egui::ViewportId::from_hash_of("daozai-update"));
+            assert_eq!(id, egui::ViewportId::from_hash_of("daozhu-update"));
             let raw = egui::RawInput {
                 viewport_id: id,
                 viewports: std::iter::once((id, egui::ViewportInfo { native_pixels_per_point: Some(1.0), ..Default::default() })).collect(),
@@ -621,7 +618,7 @@ mod tests {
             ("update-dialog", None, ""),
             ("update-connecting", Some(0.0), ""),
             ("update-downloading", Some(0.42), ""),
-            ("update-failed", None, "连接下载服务器失败，请检查网络或代理，或使用网盘下载"),
+            ("update-failed", None, "连接下载服务器失败，请检查网络或代理，或到 GitHub 发布页手动下载"),
         ] {
         app.updates.cancel = progress.map(|_| Arc::new(AtomicBool::new(false)));
         app.updates.progress = progress.unwrap_or_default();
@@ -642,8 +639,8 @@ mod tests {
             raster.free_textures(&child.textures_delta);
         }
         }
-        if let Some(old) = old { std::env::set_var("DAOZAI_DATA_DIR", old); }
-        else { std::env::remove_var("DAOZAI_DATA_DIR"); }
+        if let Some(old) = old { std::env::set_var("DAOZHU_DATA_DIR", old); }
+        else { std::env::remove_var("DAOZHU_DATA_DIR"); }
     }
 }
 
